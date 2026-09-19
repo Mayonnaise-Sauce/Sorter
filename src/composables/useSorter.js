@@ -2,6 +2,7 @@ import { reactive } from "vue";
 
 const initialState = {
 	customSorterTitle: "", // Title of the custom sorter
+	customItems: [], // Items saved to prefill the custom sorter setup form
 
 	sortingItems: [], // Original items to sort
 	lists: [], // Lists created while splitting the items
@@ -73,13 +74,16 @@ export function useSorter() {
 		state.currentRightList = state.lists.length - 1;
 	}
 
-	// Initializes a custom sorter using a user-provided title and items
+	// Initializes a custom sorter and saves its data for a possible repeat
 	function initCustomSorter(title, items) {
 		initSorter({
 			id: "custom",
 			title: title,
 			items,
 		});
+
+		state.customSorterTitle = title;
+		state.customItems = [...items];
 	}
 
 	// Handles the user's choice during a comparison

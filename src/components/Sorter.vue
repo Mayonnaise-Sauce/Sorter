@@ -1,11 +1,13 @@
 <script setup>
 import { computed, inject, watch } from "vue";
+import { useRouter } from "vue-router";
 
 import { artists } from "@/data/artists.js";
 
 // Accesses global sorter state and actions provided in main.js
 const sorterState = inject("sorterState");
 const sorterActions = inject("sorterActions");
+const router = useRouter();
 
 // Data received from the current route
 const props = defineProps({
@@ -70,10 +72,15 @@ function getItems() {
 	return artist.value.data[props.type];
 }
 
-// Initializes the sorter when the route changes
+// Initializes the sorter when the route changes and redirects an empty custom sorter
 watch(
 	() => [props.sorter, props.type, props.album],
 	() => {
+		if (props.sorter === "custom" && sorterState.customItems.length === 0) {
+			router.replace({ name: "custom" });
+			return;
+		}
+
 		const items = getItems();
 
 		if (!items) return;
@@ -105,6 +112,11 @@ function choose(value, ev) {
 
 	if (ev && ev.currentTarget) ev.currentTarget.blur();
 }
+
+// Returns to the setup form, where the current custom items and title are prefilled
+function repeatCustomSorter() {
+	router.push({ name: "custom" });
+}
 </script>
 
 <template>
@@ -112,7 +124,7 @@ function choose(value, ev) {
 		<!-- TITLE -->
 		<v-row justify="center">
 			<v-col cols="12" class="text-center">
-				<h2>{{ props.sorter === "custom" ? sorterState.title.toUpperCase() + " SORTER" : sorterTitle.toUpperCase() }}</h2>
+				<h2 class="text-wrap">{{ props.sorter === "custom" ? `${sorterState.title?.toUpperCase() ?? ""} SORTER` : sorterTitle.toUpperCase() }}</h2>
 				<p>
 					Choose the option you prefer in each battle.
 					<br />
@@ -157,7 +169,8 @@ function choose(value, ev) {
 						</tr>
 					</tbody>
 				</v-table>
-				<p>You can start over by reloading the page.</p>
+				<v-btn v-if="props.sorter === 'custom'" class="mt-4" @click="repeatCustomSorter">Repeat custom sorter</v-btn>
+				<p v-else>You can start over by reloading the page.</p>
 			</v-col>
 		</v-row>
 	</v-container>

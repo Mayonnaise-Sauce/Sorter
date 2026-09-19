@@ -5,20 +5,23 @@ import { useRouter } from "vue-router";
 // Gets the router instance to navigate between pages
 const router = useRouter();
 
+// Gets the saved custom sorter data used to prefill the setup form
+const sorterState = inject("sorterState");
+
 // Stores the current input text
 const input = ref("");
 
 // Gets the reference to the input field for focusing it after adding an item
 const itemInput = ref(null);
 
-// Stores all items added by the user
-const items = ref([]);
+// Stores the items to sort, including items loaded from a previous custom sorter
+const items = ref([...sorterState.customItems]);
 
 // Gets the sorter actions provided by a parent component
 const sorterActions = inject("sorterActions");
 
-// Stores the custom sorter title
-const sorterTitle = ref("");
+// Stores the custom sorter title, prefilled when repeating a custom sorter
+const sorterTitle = ref(sorterState.customSorterTitle);
 
 // Adds the current input as a new item
 function addItem() {
