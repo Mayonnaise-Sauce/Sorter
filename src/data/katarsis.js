@@ -1,6 +1,6 @@
-import dausosIcon from "@/assets/icons/katarsis/dausos.jpg";
-import ziedlapisTauIcon from "@/assets/icons/katarsis/ziedlapisTau.jpg";
 import katarsisIcon from "@/assets/icons/katarsis/katarsis.jpg";
+import dausosIcon from "@/assets/icons/katarsis/dausos.jpg";
+import ziedlapisTauIcon from "@/assets/icons/katarsis/ziedlapis_tau.jpg";
 
 export default {
 	id: "katarsis",

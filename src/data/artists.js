@@ -1,5 +1,6 @@
 import katarsis from "@/data/katarsis.js";
 import akli from "@/data/akli.js";
+import galera from "@/data/galera.js";
 
 export const artists = [
 	{
@@ -13,5 +14,11 @@ export const artists = [
 		name: akli.title,
 		icon: akli.icon,
 		data: akli,
+	},
+	{
+		id: galera.id,
+		name: galera.title,
+		icon: galera.icon,
+		data: galera,
 	},
 ];

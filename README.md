@@ -27,6 +27,7 @@ Currently supported:
 
 - Katarsis
 - Aklì
+- Galèra
 
 More artists can be added by adding their data to the project.
 
