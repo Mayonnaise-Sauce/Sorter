@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 
 import customIcon from "@/assets/icons/custom.png";
 
@@ -12,11 +13,24 @@ defineProps({
 
 // Navigation drawer state
 const drawer = ref(false);
+
+const router = useRouter();
+
+// Returns to the previous page
+function goBack() {
+	if (window.history.state?.back) {
+		router.back();
+		return;
+	}
+
+	router.push({ path: "/" });
+}
 </script>
 
 <template>
 	<v-app-bar density="comfortable">
 		<v-app-bar-nav-icon @click="drawer = !drawer" />
+		<v-btn icon="mdi-arrow-left" aria-label="Go back" @click="goBack" />
 		<v-toolbar-title>Sorter</v-toolbar-title>
 		<v-btn icon="mdi-home" to="/" />
 	</v-app-bar>

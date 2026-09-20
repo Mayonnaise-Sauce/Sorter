@@ -1,5 +1,5 @@
 <script setup>
-import { ref, inject, nextTick } from "vue";
+import { computed, ref, inject, nextTick } from "vue";
 import { useRouter } from "vue-router";
 
 // Gets the router instance to navigate between pages
@@ -17,11 +17,16 @@ const itemInput = ref(null);
 // Stores the items to sort, including items loaded from a previous custom sorter
 const items = ref([...sorterState.customItems]);
 
-// Gets the sorter actions provided by a parent component
+// Gets the sorter actions provided by the application
 const sorterActions = inject("sorterActions");
 
 // Stores the custom sorter title, prefilled when repeating a custom sorter
 const sorterTitle = ref(sorterState.customSorterTitle);
+
+// Enables sorting only when there are enough items and a non-empty title
+const canStartSorting = computed(() => {
+	return items.value.length >= 2 && typeof sorterTitle.value === "string" && sorterTitle.value.trim().length > 0;
+});
 
 // Adds the current input as a new item
 function addItem() {
@@ -33,25 +38,20 @@ function addItem() {
 	input.value = "";
 
 	// Focuses the input field after adding an item
-	nextTick(() => {
-		if (!itemInput.value) return;
-
-		if (typeof itemInput.value.focus === "function") {
-			itemInput.value.focus();
-			return;
-		}
-
-		const el = itemInput.value.$el || itemInput.value;
-		if (el && el.querySelector) {
-			const native = el.querySelector('input, textarea');
-			if (native && typeof native.focus === 'function') native.focus();
-		}
-	});
+	nextTick(() => itemInput.value?.focus());
 }
 
 // Removes an item from the list using its position
 function removeItem(index) {
 	items.value.splice(index, 1);
+}
+
+// Clears the current custom sorter so it can be created again
+function deleteCustomSorter() {
+	items.value = [];
+	sorterTitle.value = "";
+	input.value = "";
+	sorterActions.clearCustomSorter();
 }
 
 // Finishes creating the custom sorter
@@ -70,7 +70,7 @@ function done() {
 		<v-row justify="center">
 			<v-col cols="8" class="text-center">
 				<h2>CUSTOM SORTER</h2>
-				<p>Create your own ranking by adding the options you want to compare.</p>
+				<p>Create your own ranking by adding the options you want to sort.<br />If you leave the page, the sorter will be cleared.</p>
 			</v-col>
 		</v-row>
 		<!-- SORTER TITLE -->
@@ -89,17 +89,20 @@ function done() {
 			</v-col>
 		</v-row>
 		<v-row v-if="items.length" justify="center">
-			<p v-if="items.length === 1">1 item added</p>
-			<p v-else>{{ items.length }} items added</p>
+			<v-col cols="8" class="d-flex align-center justify-space-between flex-wrap">
+				<span v-if="items.length === 1">1 item added</span>
+				<span v-else>{{ items.length }} items added</span>
+				<v-btn variant="text" prepend-icon="mdi-reload" @click="deleteCustomSorter">Restart</v-btn>
+			</v-col>
 		</v-row>
 		<!-- LIST OF ITEMS -->
-		<v-row justify="center" v-show="items.length > 0">
+		<v-row v-if="items.length" justify="center">
 			<v-col cols="8">
 				<v-list>
 					<v-list-item class="text-wrap" v-for="(item, index) in items" :key="index">
 						{{ item }}
 						<template #append>
-							<v-btn variant="text" icon="mdi-delete" @click="removeItem(index)"> </v-btn>
+							<v-btn variant="text" icon="mdi-delete" @click="removeItem(index)"></v-btn>
 						</template>
 					</v-list-item>
 				</v-list>
@@ -107,7 +110,7 @@ function done() {
 		</v-row>
 		<!-- DONE BUTTON -->
 		<v-row justify="center">
-			<v-btn :disabled="items.length < 2 || !sorterTitle.trim()" @click="done">Start sorting</v-btn>
+			<v-btn :disabled="!canStartSorting" @click="done">Start sorting</v-btn>
 		</v-row>
 	</v-container>
 </template>

@@ -1,38 +1,45 @@
 import { reactive } from "vue";
 
-const initialState = {
-	customSorterTitle: "", // Title of the custom sorter
-	customItems: [], // Items saved to prefill the custom sorter setup form
+function createInitialState() {
+	return {
+		customSorterTitle: "", // Title of the custom sorter
+		customItems: [], // Items saved to prefill the custom sorter setup form
+		title: "", // Title of the active sorter
 
-	sortingItems: [], // Original items to sort
-	lists: [], // Lists created while splitting the items
-	parents: [], // Stores which list created each smaller list
-	equals: [], // Stores items considered equal by the user
-	results: [], // Temporary list used while merging items
+		sortingItems: [], // Original items to sort
+		lists: [], // Lists created while splitting the items
+		parents: [], // Stores which list created each smaller list
+		results: [], // Temporary list used while merging items
 
-	leftIndex: 0, // Current position in the left list
-	rightIndex: 0, // Current position in the right list
+		leftIndex: 0, // Current position in the left list
+		rightIndex: 0, // Current position in the right list
 
-	currentLeftList: 0, // Index of the current left list being compared
-	currentRightList: 0, // Index of the current right list being compared
+		currentLeftList: 0, // Index of the current left list being compared
+		currentRightList: 0, // Index of the current right list being compared
 
-	question: 1, // Current battle number
+		question: 1, // Current battle number
 
-	totalSize: 0, // Total number of comparisons needed
-	finishedSize: 0, // Number of comparisons already completed
+		totalSize: 0, // Total number of comparisons needed
+		finishedSize: 0, // Number of items processed during merges
 
-	finished: false, // Indicates whether sorting has finish
+		finished: false, // Indicates whether sorting has finished
 
-	ranking: [], // Final sorted ranking
-};
+		ranking: [], // Final sorted ranking
+	};
+}
 
 // Creates and manages the state and actions of the sorter
 export function useSorter() {
-	const state = reactive({ ...initialState });
+	const state = reactive(createInitialState());
 
 	// Resets the sorter back to its initial state
 	function reset() {
-		Object.assign(state, structuredClone(initialState));
+		Object.assign(state, createInitialState());
+	}
+
+	// Clears the custom sorter and its current sorting state
+	function clearCustomSorter() {
+		reset();
 	}
 
 	// Returns a randomly shuffled copy of an array
@@ -69,7 +76,6 @@ export function useSorter() {
 			state.parents.push(i, i);
 		}
 
-		state.equals = Array(state.sortingItems.length).fill(-1);
 		state.currentLeftList = state.lists.length - 2;
 		state.currentRightList = state.lists.length - 1;
 	}
@@ -105,8 +111,6 @@ export function useSorter() {
 			const right = rightList[state.rightIndex++];
 
 			state.results.push(left, right);
-			state.equals[left] = right;
-
 			state.finishedSize++;
 		}
 
@@ -164,6 +168,7 @@ export function useSorter() {
 	// Makes the state and these functions available to Vue components
 	return {
 		state,
+		clearCustomSorter,
 		initSorter,
 		initCustomSorter,
 		choose,
