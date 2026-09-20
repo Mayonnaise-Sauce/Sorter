@@ -27,8 +27,8 @@ Currently supported:
 
 - Katarsis
 - Aklì
-
-More artists can be added by adding their data to the project.
+- Galèra
+- McLoud
 
 ## Tech Stack
 

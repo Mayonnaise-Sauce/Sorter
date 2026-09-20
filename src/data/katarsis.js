@@ -1,6 +1,6 @@
-import dausosIcon from "@/assets/icons/katarsis/dausos.jpg";
-import ziedlapisTauIcon from "@/assets/icons/katarsis/ziedlapisTau.jpg";
 import katarsisIcon from "@/assets/icons/katarsis/katarsis.jpg";
+import dausosIcon from "@/assets/icons/katarsis/dausos.jpg";
+import ziedlapisTauIcon from "@/assets/icons/katarsis/ziedlapis_tau.jpg";
 
 export default {
 	id: "katarsis",
@@ -37,7 +37,8 @@ export default {
 		"Tavo Akys",
 		"Kas man be jūros",
 		"Nebepaleidžia",
-		"Surasiu"
+		"Surasiu",
+		"Tu matei"
 	],
 	albums: [
 		{

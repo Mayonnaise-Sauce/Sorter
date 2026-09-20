@@ -57,7 +57,7 @@ const albumDialog = ref(false);
 					<v-row align="stretch">
 						<v-col v-for="album in artist.data.albums" :key="album.id" class="text-center">
 							<v-btn icon variant="plain" width="80" height="80" :to="`/${artist.id}/albums/${album.id}`" @click="albumDialog = false">
-								<v-avatar size="80" :image="album.icon" />
+								<v-avatar size="80" rounded="lg" :image="album.icon" />
 							</v-btn>
 							<p class="text-wrap">{{ album.name }}</p>
 						</v-col>

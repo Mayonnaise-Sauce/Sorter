@@ -1,11 +1,13 @@
 <script setup>
 import { computed, inject, watch } from "vue";
+import { useRouter } from "vue-router";
 
 import { artists } from "@/data/artists.js";
 
 // Accesses global sorter state and actions provided in main.js
 const sorterState = inject("sorterState");
 const sorterActions = inject("sorterActions");
+const router = useRouter();
 
 // Data received from the current route
 const props = defineProps({
@@ -48,6 +50,18 @@ const sorterTitle = computed(() => {
 	}
 });
 
+// Displays the active custom title or the title generated from the route
+const displayTitle = computed(() => {
+	if (props.sorter === "custom") {
+		return `${sorterState.title} SORTER`;
+	}
+
+	return sorterTitle.value;
+});
+
+// Calculates progress once per render instead of calling the action twice
+const progress = computed(() => sorterActions.progress());
+
 // Gets the items that should be sorted
 function getItems() {
 	if (!artist.value) {
@@ -70,10 +84,15 @@ function getItems() {
 	return artist.value.data[props.type];
 }
 
-// Initializes the sorter when the route changes
+// Initializes the sorter when the route changes and redirects an empty custom sorter
 watch(
 	() => [props.sorter, props.type, props.album],
 	() => {
+		if (props.sorter === "custom" && sorterState.customItems.length === 0) {
+			router.replace({ name: "custom" });
+			return;
+		}
+
 		const items = getItems();
 
 		if (!items) return;
@@ -100,10 +119,13 @@ const rightItem = computed(() => {
 });
 
 // Sends the user's choice to the sorter
-function choose(value, ev) {
+function choose(value) {
 	sorterActions.choose(value);
+}
 
-	if (ev && ev.currentTarget) ev.currentTarget.blur();
+// Returns to the setup form, where the current custom items and title are prefilled
+function repeatCustomSorter() {
+	router.push({ name: "custom" });
 }
 </script>
 
@@ -112,7 +134,7 @@ function choose(value, ev) {
 		<!-- TITLE -->
 		<v-row justify="center">
 			<v-col cols="12" class="text-center">
-				<h2>{{ props.sorter === "custom" ? sorterState.title.toUpperCase() + " SORTER" : sorterTitle.toUpperCase() }}</h2>
+				<h2 class="text-wrap">{{ displayTitle.toUpperCase() }}</h2>
 				<p>
 					Choose the option you prefer in each battle.
 					<br />
@@ -125,22 +147,22 @@ function choose(value, ev) {
 			<v-col cols="12" class="text-center">
 				<h3 v-if="!sorterState.finished">Battle #{{ sorterState.question }}</h3>
 				<h3 v-else>Total number of battles: {{ sorterState.question - 1 }}</h3>
-				<v-progress-linear height="30" color="blue-grey" :model-value="sorterActions.progress()" rounded>{{ sorterActions.progress() }}%</v-progress-linear>
+				<v-progress-linear height="30" color="blue-grey" :model-value="progress" rounded>{{ progress }}%</v-progress-linear>
 			</v-col>
 		</v-row>
 		<!-- ITEM BUTTONS -->
 		<v-row v-if="!sorterState.finished" class="sorter" justify="center">
 			<v-col cols="4" class="left-col">
-				<v-btn class="sorter-button full-size-btn" @click="choose(-1, $event)">
+					<v-btn class="sorter-button full-size-btn" @click="choose(-1)">
 					{{ leftItem }}
 				</v-btn>
 			</v-col>
 			<v-col cols="4" class="center-col d-flex flex-column">
-				<v-btn class="flex-grow-1 mb-2" @click="choose(0, $event)">I like both</v-btn>
-				<v-btn class="flex-grow-1" @click="choose(0, $event)">No opinion</v-btn>
+					<v-btn class="flex-grow-1 mb-2" @click="choose(0)">I like both</v-btn>
+					<v-btn class="flex-grow-1" @click="choose(0)">No opinion</v-btn>
 			</v-col>
 			<v-col cols="4" class="right-col">
-				<v-btn class="sorter-button full-size-btn" @click="choose(1, $event)">
+					<v-btn class="sorter-button full-size-btn" @click="choose(1)">
 					{{ rightItem }}
 				</v-btn>
 			</v-col>
@@ -157,7 +179,8 @@ function choose(value, ev) {
 						</tr>
 					</tbody>
 				</v-table>
-				<p>You can start over by reloading the page.</p>
+				<v-btn v-if="props.sorter === 'custom'" class="mt-4" @click="repeatCustomSorter">Repeat custom sorter</v-btn>
+				<p v-else>You can start over by reloading the page.</p>
 			</v-col>
 		</v-row>
 	</v-container>
