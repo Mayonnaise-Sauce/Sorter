@@ -1,7 +1,8 @@
+import akliIcon from "@/assets/icons/akli/akli.jpg";
 import taikaIcon from "@/assets/icons/akli/taika.jpg";
 import refleksijaIcon from "@/assets/icons/akli/refleksija.jpg";
 import iiiIcon from "@/assets/icons/akli/iii.jpg";
-import akliIcon from "@/assets/icons/akli/akli.jpg";
+import teatrasIcon from "@/assets/icons/akli/teatras.jpg";
 
 export default {
 	id: "akli",
@@ -38,10 +39,17 @@ export default {
 		"Save laikau",
 		"Pabodo, matyt",
 		"D.I.E",
-		"Per saldu",
 		"ŽGŽ",
+		"Teatras",
+		"Per saldu",
+		"Instinktas",
+		"Kopijos kopija",
 		"Morfinas",
-		"KOPIJOS KOPIJA"
+		"Prasmei/Beprasmybei",
+		"Nori namo",
+		"Ar aš su jais ar vis dar čia",
+		"Laiškai",
+		"Gražu"
 	],
 	albums: [
 		{
@@ -91,6 +99,23 @@ export default {
 				"Labanakt",
 				"Save laikau",
 				"Pabodo, matyt"
+			],
+		},
+		{
+			id: "teatras",
+			name: "Teatras",
+			icon: teatrasIcon,
+			songs: [
+				"Teatras",
+				"Per saldu",
+				"Instinktas",
+				"Kopijos kopija",
+				"Morfinas",
+				"Prasmei/Beprasmybei",
+				"Nori namo",
+				"Ar aš su jais ar vis dar čia",
+				"Laiškai",
+				"Gražu"
 			],
 		},
 	],

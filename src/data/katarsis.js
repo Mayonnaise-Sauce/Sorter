@@ -37,7 +37,8 @@ export default {
 		"Tavo Akys",
 		"Kas man be jūros",
 		"Nebepaleidžia",
-		"Surasiu"
+		"Surasiu",
+		"Tu matei"
 	],
 	albums: [
 		{
