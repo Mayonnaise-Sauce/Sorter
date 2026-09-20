@@ -8,7 +8,7 @@ import { artists } from "@/data/artists.js";
 		<!-- TITLE -->
 		<v-row justify="center">
 			<v-col cols="12" class="text-center">
-				<h1 class="font-weight-bold">SORTER</h1>
+				<h1 class="font-weight-bold">LITHUANIAN MUSIC SORTER</h1>
 				<p>Pick an artist to start sorting their songs or albums.<br />Or create your own custom ranking.</p>
 			</v-col>
 		</v-row>
