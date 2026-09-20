@@ -52,7 +52,7 @@ function goBack() {
 				<v-divider class="my-2" />
 				<v-list-item v-for="album in artist.data.albums" :key="album.id" :title="album.name" :to="`/${artist.id}/albums/${album.id}`">
 					<template #prepend>
-						<v-avatar>
+						<v-avatar rounded="lg">
 							<v-img :src="album.icon" :alt="album.name" />
 						</v-avatar>
 					</template>

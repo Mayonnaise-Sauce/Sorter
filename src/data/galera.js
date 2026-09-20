@@ -4,7 +4,7 @@ import garsuIcon from "@/assets/icons/galera/garsu.jpg";
 
 export default {
 	id: "galera",
-	title: "Galera",
+	title: "Galèra",
   	icon: galeraIcon,
 	songs: [
 		"Ziggy Dance",
